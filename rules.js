@@ -1,0 +1,3 @@
+let rules = {
+	translucent: false
+}
