@@ -1,4 +1,4 @@
-item.layer('layer-dummy-particle')
+//item.layer('layer-dummy-particle')
 system.call(
 	new dummyPlayer(
 		{
@@ -9,6 +9,32 @@ system.call(
 		'Dummy Player',
 		75,
 		util.rng(2**31)
+	),
+	'layer-dummy'
+)
+system.call(
+	new dummyFire(
+		{
+			x: window.innerWidth / 4 - 50,
+			y: window.innerHeight / 4 - 50 
+		},
+		Infinity,
+		100,
+		'dummy-fire',
+		'Dummy Fire'
+	),
+	'layer-dummy'
+)
+system.call(
+	new dummyFire(
+		{
+			x: window.innerWidth / 1.5 - 50,
+			y: window.innerHeight / 4   
+		},
+		Infinity,
+		0,
+		'dummy-fire',
+		'Dummy Fire'
 	),
 	'layer-dummy'
 )
