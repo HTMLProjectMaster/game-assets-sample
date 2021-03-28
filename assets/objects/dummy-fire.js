@@ -18,7 +18,7 @@ class dummyFire{
 		this.duration -= 1
 	}	
 	particle(){
-		system.call(new dummyFireParticle({x: this.position.x + (Math.random() * this.scale), y: this.position.y + (Math.random() * this.scale)}, 'dummy-fire-particle', 'Dummy Fire Particle', Math.floor(Math.random() * Math.floor(60))), 'layer-dummy-particle', true)
+		system.call(new dummyFireParticle({x: this.position.x + (Math.random() * this.scale), y: this.position.y + (Math.random() * this.scale)}, 'particle', 'Dummy Fire Particle', Math.floor(Math.random() * Math.floor(60))), 'layer-dummy-particle', true)
 	}
 
 }
