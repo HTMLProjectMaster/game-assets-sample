@@ -1,15 +1,6 @@
 class dummyMoveParticle{
-	constructor(pos, col, type, name, life, size){
-		this.position = {
-			x: pos.x,
-			y: pos.y
-		}
-		this.velocity = {
-			x: undefined, 
-			y: undefined
-		}
-		this.color = col
-		this.scale = size
+	constructor(pos, form, col, type, name, life){
+		this.color = col	
 		this.name = name
 		this.type = type
 		this.launched = false
@@ -17,22 +8,35 @@ class dummyMoveParticle{
 		this.life = life
 		this.time = 0
 		this.brightness = 0
-		this.color = null
+		this.color = col
+		this.position = {
+			x: pos.x,
+			y: pos.y
+		}
+		this.velocity = {
+			x: 0, 
+			y: 0
+		}
+		this.transform = {
+			width: form.width,
+			height: form.height
+		}
+
 	}
 	update(){
+		this.draw()
 		this.launch()
 		this.decelerate()
 		this.move()
 		this.fall()
 		this.live()
-		this.colorate()
-		this.draw()
+		this.colorate()	
 	}
 	launch(){
 		if(!this.launched){
 			this.launched = true
-			this.velocity.x = Math.floor(Math.random() * Math.floor(3) - 1) * Math.floor(Math.random() * Math.floor(9) + 1) * (this.scale / 10)
-			this.velocity.y = Math.floor(Math.random() * Math.floor(-2)) * Math.floor(Math.random() * Math.floor(9) + 1) * (this.scale / 10)
+			this.velocity.x = Math.floor(Math.random() * Math.floor(3) - 1) * Math.floor(Math.random() * Math.floor(9) + 1) * (this.transform.width / 10)
+			this.velocity.y = Math.floor(Math.random() * Math.floor(-2)) * Math.floor(Math.random() * Math.floor(9) + 1) * (this.transform.height / 10)
 		}
 	}
 	decelerate(){
@@ -45,7 +49,7 @@ class dummyMoveParticle{
 	}
 	fall(){
 		this.time += 1
-		this.position.y += (this.fallspeed * (this.time * 20)) * (this.scale / 10)
+		this.position.y += (this.fallspeed * (this.time * 20)) * (this.transform.height / 10)
 	}
 	live(){
 		if(this.life > 0){
@@ -65,7 +69,7 @@ class dummyMoveParticle{
 	draw(){
 		canvas.context.beginPath()
 		canvas.context.fillStyle = this.color
-		canvas.context.fillRect(this.position.x, this.position.y, this.scale, this.scale)
+		canvas.context.fillRect(this.position.x, this.position.y, this.transform.width, this.transform.height)
 		canvas.context.closePath()
 	}
 }

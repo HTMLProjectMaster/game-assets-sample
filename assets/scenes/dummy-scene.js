@@ -1,31 +1,90 @@
 //item.layer('layer-dummy-particle')
+
+system.call(
+	new dummyPushable(
+		{
+			x: 200,
+			y: 100
+		},
+		{
+			width: 100,
+			height: 100
+		},
+		'yellow',
+		'dummy collider',
+		'Dummy Pushable',
+		util.rng(2**31)
+	),
+	'layer-dummy'
+)
 system.call(
 	new dummyPlayer(
 		{
-			x: window.innerWidth / 2 - 50,
-			y: window.innerHeight / 2 - 50
+			x: 100,
+			y: 100
 		},
-		'white', 'dummy',
+		{
+			width: 100,
+			height: 100
+		},
+		'blue', 'dummy collider',
 		'Dummy Player',
-		75,
 		util.rng(2**31)
+	),
+	'layer-dummy'
+)
+system.call(
+	new dummyWall(
+		{
+			x: 300,
+			y: 100
+		},
+		{
+			width: 100,
+			height: 100
+		},
+		'red',
+		'dummy collider static',
+		'Dummy Wall',
+		util.rng(2**31)
+	),
+	'layer-dummy'
+)
+
+system.call(
+	new dummyFire(
+		{
+			x: 200,
+			y: 300 
+		},
+		{
+			width: 100,
+			height: 100
+		},
+		Infinity,
+		'dummy fire',
+		'Dummy Fire'
 	),
 	'layer-dummy'
 )
 system.call(
 	new dummyFire(
 		{
-			x: window.innerWidth / 4 - 50,
-			y: window.innerHeight / 4 - 50 
+			x: 149,
+			y: 349 
+		},
+		{
+			width: 2,
+			height: 2
 		},
 		Infinity,
-		100,
-		'dummy-fire',
+		'dummy fire',
 		'Dummy Fire'
 	),
 	'layer-dummy'
 )
-system.call(
+
+/*system.call(
 	new dummyFire(
 		{
 			x: window.innerWidth / 1.5 - 50,
@@ -33,11 +92,11 @@ system.call(
 		},
 		Infinity,
 		0,
-		'dummy-fire',
+		'dummy fire',
 		'Dummy Fire'
 	),
 	'layer-dummy'
-)
+)*/
 /*system.call(
 	new dummyPolygon(
 		[

@@ -1,38 +1,41 @@
 class dummyFireParticle{
-	constructor(pos, type, name, life){
+	constructor(pos, form, type, name, life){
 		this.position = {
 			x: pos.x,
 			y: pos.y
 		}
 		this.velocity = {
 			x: 0, 
-			y: undefined
+			y: 0
 		}
-		this.scale = 10
+		this.transform = {
+			width: form.width,
+			height: form.height
+		}
+		this.color = null	
 		this.name = name
 		this.type = type
 		this.launched = false
-		this.flyspeed = 0.005
+		this.flyspeed = 0.025
 		this.life = life
-		this.time = 0	
-		this.color = null
+		this.time = 0
 		this.brightness = 0
 	}
 	update(){
+		this.draw()
 		this.launch()
 		this.decelerate()
 		this.move()
 		this.fly()
-		this.colorate()
 		this.live()
-		this.draw()
+		this.colorate()	
 	}
 	launch(){
 		if(!this.launched){
 			this.launched = true
 			while(this.velocity.x == 0){
-				this.velocity.x = Math.floor(Math.random() * Math.floor(3) - 1) * Math.floor(Math.random() * Math.floor(9) + 1) * (this.scale / 10)
-				this.velocity.y = Math.floor(Math.random() * Math.floor(-2)) * Math.floor(Math.random() * Math.floor(9) + 1) * (this.scale / 10)
+				this.velocity.x = Math.floor(Math.random() * Math.floor(3) - 1) * Math.floor(Math.random() * Math.floor(9) + 1) * (this.transform.width / 10)
+				this.velocity.y = Math.floor(Math.random() * Math.floor(-2)) * Math.floor(Math.random() * Math.floor(9) + 1) * (this.transform.height / 10)
 			}
 		}
 	}
@@ -46,7 +49,7 @@ class dummyFireParticle{
 	}
 	fly(){
 		this.time += 1
-		this.position.y -= (this.flyspeed * (this.time * 20)) * (this.scale / 10)
+		this.velocity.y = -(this.flyspeed * (this.time * 10)) * (this.transform.height / 10)
 	}
 	live(){
 		if(this.life > 0){
@@ -55,18 +58,18 @@ class dummyFireParticle{
 			item.clear(this, true)
 		}
 	}
-	colorate(){	
+	colorate(){
 		this.brightness += 10
 		if(rules.translucent == true){
-			this.color = 'rgba(255,' + String(this.brightness) + ',' + String(this.brightness / 2) + ',' + String(100/this.brightness) +')'
+			this.color = 'rgba(255, ' + String(this.brightness) + ', ' + String(this.brightness / 2) + ', ' + String(this.brightness) + ')'
 		}else{
-			this.color = 'rgb(255,' + String(this.brightness) + ',' + String(this.brightness / 2) + ')'
+			this.color = 'rgb(255, ' + String(this.brightness) + ', ' + String(this.brightness / 2) + ')'
 		}
 	}
-	draw(){	
+	draw(){
 		canvas.context.beginPath()
 		canvas.context.fillStyle = this.color
-		canvas.context.fillRect(this.position.x, this.position.y, this.scale, this.scale)
+		canvas.context.fillRect(this.position.x, this.position.y, this.transform.width, this.transform.height)
 		canvas.context.closePath()
 	}
 }

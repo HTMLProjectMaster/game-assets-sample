@@ -1,13 +1,16 @@
 class dummyFire{
-	constructor(pos, time, size, type, name){
+	constructor(pos, form, time, type, name){
 		this.position = {
 			x: pos.x, 
 			y: pos.y
 		}
+		this.transform = {
+			width: form.width,
+			height: form.height
+		}
 		this.duration = time
 		this.type = type
 		this.name = name
-		this.scale = size
 	}
 	update(){
 		if(this.duration > 0){
@@ -18,7 +21,23 @@ class dummyFire{
 		this.duration -= 1
 	}	
 	particle(){
-		system.call(new dummyFireParticle({x: this.position.x + (Math.random() * this.scale), y: this.position.y + (Math.random() * this.scale)}, 'particle', 'Dummy Fire Particle', Math.floor(Math.random() * Math.floor(60))), 'layer-dummy-particle', true)
+		let rngscale = Math.random() + 1
+		system.call(
+			new dummyFireParticle(
+				{
+					x: this.position.x + (Math.random() * this.transform.width),
+					y: this.position.y + (Math.random() * this.transform.height)
+				},
+				{
+					width:  rngscale * 10,
+					height:  rngscale * 10
+				},
+				'particle fire collider', 
+				'Dummy Fire Particle', 
+				util.rng(60)
+			), 
+			'layer-dummy-particle',
+			true
+		)
 	}
-
 }

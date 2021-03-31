@@ -1,47 +1,33 @@
 class dummyPlayer{
-	constructor(pos, col, type, name, size, index){	
-		this.index = index
-		this.name = name
-		this.type = type
+	constructor(pos, form, col, type, name, index){	
 		this.position = {
 			x: pos.x,
 			y: pos.y
 		}
+		this.transform = {
+			width: form.width,
+			height: form.height
+		}
+		this.index = index
+		this.name = name
+		this.type = type
 		this.color = col
-		this.basecol = col
-		this.scale = size
-		this.basespeed = 5
 		this.speed = 5
-		this.sprintspeed = 10
-		this.player = false
+		this.walkspeed = this.speed
+		this.sprintspeed = this.walkspeed * 2
 	}
 	update(){
-		this.mouseTrigger()
-		this.control()
-		this.collide()
 		this.draw()
+		this.mouseTrigger()
+		this.movement()
+		this.collision()
 	}
 	mouseTrigger(){
-		if(input.mouse.position.x - this.position.x - this.scale/2 < this.scale/2 && input.mouse.position.x - this.position.x - this.scale/2 > -this.scale/2 && input.mouse.position.y - this.position.y - this.scale/2 < this.scale/2 && input.mouse.position.y - this.position.y - this.scale/2 > -this.scale/2 ){
+		if(input.mouse.position.x - this.position.x - this.transform.width/2 < this.transform.width/2 && input.mouse.position.x - this.position.x - this.transform.width/2 > -this.transform.width/2 && input.mouse.position.y - this.position.y - this.transform.height/2 < this.transform.height/2 && input.mouse.position.y - this.position.y - this.transform.height/2 > -this.transform.height/2 ){
 			if(input.mouse.button.includes(0)){
-				this.position.x = input.mouse.position.x - this.scale/2
-				this.position.y = input.mouse.position.y - this.scale/2
-			}
-			if(input.mouse.button.includes(1)){
-				this.player = false
-			}
-			if(input.mouse.button.includes(2)){
-				this.player = true
+				this.position.x = input.mouse.position.x - this.transform.width/2
+				this.position.y = input.mouse.position.y - this.transform.height/2
 			}	
-		}
-	}
-	control(){
-		if(this.player){
-			this.movement()
-			this.color = 'blue'
-		}
-		else{
-			this.color = this.basecol
 		}
 	}
 	movement(){	
@@ -50,27 +36,39 @@ class dummyPlayer{
 		if(input.keyboard.key.includes(39)){this.position.x += this.speed}
 		if(input.keyboard.key.includes(40)){this.position.y += this.speed}
 		if(input.keyboard.key.includes(16)){
-			this.speed = this.sprintspeed * (this.scale / 100)
-			system.call(new dummyMoveParticle({x: this.position.x + (this.scale * Math.random()), y: this.position.y + this.scale}, 'white', 'particle', 'Dummy Foot Particle', Math.floor(Math.random() * Math.floor(15)), 10 * (this.scale / 100)), 'layer-dummy-particle', true)
-		}
-		else{this.speed = this.basespeed * (this.scale / 100)}
+			this.speed = this.sprintspeed
+			system.call(
+				new dummyMoveParticle(
+					{
+						x: this.position.x + ((this.transform.width) * Math.random()), 
+						y: this.position.y + this.transform.height
+					},
+					{
+						width: 10 * (this.transform.width / 100),
+						height: 10 * (this.transform.height / 100)
+					},
+					'white', 
+					'dummy particle collider static', 
+					'Dummy Move Particle', 
+					util.rng(15)
+				),
+				'layer-dummy-particle', 
+				true
+			)
+		}else{this.speed = this.walkspeed}
 	}
 	draw(){
 		canvas.context.beginPath();
 		canvas.context.fillStyle = this.color;
-		canvas.context.fillRect(this.position.x, this.position.y, this.scale, this.scale);
+		canvas.context.fillRect(this.position.x, this.position.y, this.transform.width, this.transform.height)
 		canvas.context.closePath();
 	}
-	collide(){
+	collision(){
 		for(var i = 0; i < item.layout.length; i++){
 			for(var j = 0; j < item.layout[i].content.length; j++){
-				if((util.collide(this.position.x, this.position.y, this.scale, item.layout[i].content[j].position.x, item.layout[i].content[j].position.y, item.layout[i].content[j].scale) == true) && item.layout[i].content[j] != this && item.layout[i].content[j].type != 'particle'){
-					console.log('colliding with: ', item.layout[i].content[j].name)
-					this.vector = util.vectoryze(this.position.x, this.position.y, item.layout[i].content[j].position.x, item.layout[i].content[j].position.y)
-					//if(this.position.x - item.layout[i].content[j].position.x > -45 && this.position.x - item.layout[i].content[j].position.x < -135){ this.position.x -= (1 / this.vector.y) * 100}
-					//if(this.position.x - item.layout[i].content[j].position.x > 45 && this.position.x - item.layout[i].content[j].position.x < 135){ this.position.x += (1 / this.vector.y) * 100}
-					if(this.position.y - item.layout[i].content[j].position.y > -45 && this.position.y - item.layout[i].content[j].position.y < 45){ this.position.y -= (1 / this.vector.y) * 150 * this.speed}
-					if(this.position.y - item.layout[i].content[j].position.y > -135 && this.position.y - item.layout[i].content[j].position.y < 135){ this.position.y += (1 / this.vector.y) * 150 * this.speed}
+				if(item.layout[i].content[j].type.search('collider') != -1 && item.layout[i].content[j].type.search('static') == -1){
+				util.collide({first: this, second: item.layout[i].content[j]})
+			
 				}
 			}
 		}
