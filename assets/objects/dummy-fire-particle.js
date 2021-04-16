@@ -28,7 +28,8 @@ class dummyFireParticle{
 		this.move()
 		this.fly()
 		this.live()
-		this.colorate()	
+		this.colorate()
+		this.collide()
 	}
 	launch(){
 		if(!this.launched){
@@ -71,5 +72,25 @@ class dummyFireParticle{
 		canvas.context.fillStyle = this.color
 		canvas.context.fillRect(this.position.x, this.position.y, this.transform.width, this.transform.height)
 		canvas.context.closePath()
+	}
+	collide(){
+		for(var i = 0; i < item.layout.length; i++){
+			for(var j = 0; j < item.layout[i].content.length; j++){
+				if(util.trigger({first: this, second: item.layout[i].content[j]})){	
+					if(item.layout[i].content[j].debuffs != undefined){
+						if(item.layout[i].content[j].debuffs.search('infire') == -1 && item.layout[i].content[j].type.search('player') != -1){
+							if(util.rng(100) == 0){
+								item.layout[i].content[j].setFire()	
+							}
+						}
+					}
+				}
+				for(var k = 0; k < item.layout[i].content[j].children.length; k++){
+					if(util.trigger({first: this, second: item.layout[i].content[j].children[k]})){
+						if(item.layout[i].content[j].children[k].type.search('water') != -1){item.clear(this)}	
+					}
+				}
+			}
+		}
 	}
 }
